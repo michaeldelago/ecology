@@ -1,22 +1,30 @@
 (defpackage cl-config
-  (:use :cl))
+  (:use :cl)
+  (:export #:defconfig))
 (in-package :cl-config)
-
-(defmacro defconfig ((&key (accessor-prefix 'config-) (auto-initialize t)) &rest configs)
-  "Defines a configuration specification"
- `(progn
-    (defstruct (global-configuration (:conc-name ',accessor-prefix))
-      ,@(loop for config in configs
-              collect (init-config config)))
-    (and ,auto-initialize
-         (make-global-configuration))))
-
-(defun init-config (config)
-  (destructuring-bind (name &key env (typefun (lambda (x) x)))
-      config
-    `(,name (funcall ,typefun (when ',env
-             (uiop:getenv ,(make-env-var name)))))))
 
 (defun make-env-var (name)
   (cond ((symbolp name) (string-upcase (substitute #\_ #\- (string name))))
         ((stringp name) name)))
+
+(defun symbol-append (&rest symbols) 
+  (intern (apply #'concatenate 'string 
+                 (mapcar #'symbol-name symbols))))
+
+(defun init-config (prefix config)
+  (destructuring-bind (name &key (env nil) (default nil) key)
+      config
+    (let ((config-value (or (when env
+                              (uiop:getenvp (make-env-var env)))
+                            (when default
+                              default))))
+      `(defun ,(symbol-append prefix name) ()
+         ,(if (null key)
+              config-value
+              (funcall key config-value))))))
+
+(defmacro defconfig ((&key (prefix 'config-)) &rest configs)
+  "Defines a configuration specification"
+  `(progn
+    ,@(loop for config in configs
+            collect (init-config prefix config))))

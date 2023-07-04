@@ -4,8 +4,14 @@
         :rove))
 (in-package :cl-config/tests/main)
 
-;; NOTE: To run this test file, execute `(asdf:test-system :cl-config)' in your Lisp.
 
-(deftest test-target-1
-  (testing "should (= 1 1) to be true"
-    (ok (= 1 1))))
+(setup
+  (defconfig nil
+    (home :env "HOME")
+    (unset-var :env "doesnt-exist" :default "default-value")))
+
+(deftest env-vars 
+  (testing "Able to grab configuration from an environment variable"
+    (ok (equalp (uiop:getenvp "HOME") (config-home))))
+  (testing "default values are resolved if env var is not found"
+    (ok (equalp "default-value" (config-unset-var)))))
