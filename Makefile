@@ -23,3 +23,9 @@ shell:
 	rlwrap $(LISP) --eval "(ql:quickload 'asdf)" \
 		--eval '(asdf:load-asd "$(PWD)/cl-config.asd")' \
     --eval '(ql:quickload :cl-config)'
+
+fmt:
+	$(LISP) --non-interactive \
+		--eval '(asdf:load-system :trivial-formatter)' \
+		--eval '(trivial-formatter:fmt :cl-config :supersede)' \
+		--quit

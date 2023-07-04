@@ -1,25 +1,28 @@
 (defpackage cl-config
   (:use :cl)
   (:export #:defconfig))
+
 (in-package :cl-config)
 
 (defun make-env-var (name)
-  (string-upcase 
-    (substitute #\_ #\- (if (symbolp name) 
-                            (string name) 
-                            name))))
+  (string-upcase
+    (substitute #\_ #\-
+                (if (symbolp name)
+                    (string name)
+                    name))))
 
-(defun symbol-append (&rest symbols) 
-  (intern (apply #'concatenate 'string 
-                 (mapcar #'symbol-name symbols))))
+(defun symbol-append (&rest symbols)
+  (intern (apply #'concatenate 'string (mapcar #'symbol-name symbols))))
 
 (defun init-config (prefix config)
-  (destructuring-bind (name &key (env nil) (default nil) key)
+  (destructuring-bind
+      (name &key (env nil) (default nil) key)
       config
-        (let ((config-value `(or ,(when env
-                                    `(uiop:getenvp ,(make-env-var env)))
-                                 ,(when default
-                                    default))))
+    (let ((config-value
+           `(or ,(when env
+                   `(uiop:getenvp ,(make-env-var env)))
+                ,(when default
+                   default))))
       `(defun ,(symbol-append prefix name) ()
          ,(if (null key)
               config-value
