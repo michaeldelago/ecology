@@ -4,8 +4,10 @@
 (in-package :cl-config)
 
 (defun make-env-var (name)
-  (cond ((symbolp name) (string-upcase (substitute #\_ #\- (string name))))
-        ((stringp name) name)))
+  (string-upcase 
+    (substitute #\_ #\- (if (symbolp name) 
+                            (string name) 
+                            name))))
 
 (defun symbol-append (&rest symbols) 
   (intern (apply #'concatenate 'string 
@@ -14,14 +16,14 @@
 (defun init-config (prefix config)
   (destructuring-bind (name &key (env nil) (default nil) key)
       config
-    (let ((config-value (or (when env
-                              (uiop:getenvp (make-env-var env)))
-                            (when default
-                              default))))
+        (let ((config-value `(or ,(when env
+                                    `(uiop:getenvp ,(make-env-var env)))
+                                 ,(when default
+                                    default))))
       `(defun ,(symbol-append prefix name) ()
          ,(if (null key)
               config-value
-              (funcall key config-value))))))
+              `(funcall ,key ,config-value))))))
 
 (defmacro defconfig ((&key (prefix 'config-)) &rest configs)
   "Defines a configuration specification"
