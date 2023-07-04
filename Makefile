@@ -24,6 +24,8 @@ shell:
 		--eval '(asdf:load-asd "$(PWD)/cl-config.asd")' \
     --eval '(ql:quickload :cl-config)'
 
+# Install formatter with command:
+# $(LISP) ros install hyotang666/trivial-formatter
 fmt:
 	$(LISP) --non-interactive \
 		--eval '(asdf:load-system :trivial-formatter)' \
