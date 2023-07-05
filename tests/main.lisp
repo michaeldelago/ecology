@@ -1,8 +1,8 @@
-(defpackage cl-config/tests/main
+(defpackage ecology/tests/main
   (:use :cl
-        :cl-config
+        :ecology
         :rove))
-(in-package :cl-config/tests/main)
+(in-package :ecology/tests/main)
 
 (setup
   (defconfig nil

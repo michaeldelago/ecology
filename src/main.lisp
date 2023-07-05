@@ -1,8 +1,8 @@
-(defpackage cl-config
+(defpackage ecology
   (:use :cl)
   (:export #:defconfig))
 
-(in-package :cl-config)
+(in-package :ecology)
 
 (defun make-env-var (name)
   (string-upcase
