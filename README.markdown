@@ -10,7 +10,16 @@ At the moment, only `env` and `default` configuration resolvers exist. As I need
 
 ### The `defconfig` macro
 
-This is how configurations are created. This will result in a `config-home` function the will return the value of `$HOME` at runtime.
+This is how configurations are created. The general syntax is as follows:
+
+```lisp
+(ecology:defconfig (:prefix config-)
+  (CONFIG_NAME :ENV "ENV_VAR" 
+               :DEFAULT "default_value" 
+               :KEY #'identity))
+```
+
+This will result in a `config-home` function the will return the value of `$HOME` at runtime.
 
 ```lisp
 (ecology:defconfig nil
