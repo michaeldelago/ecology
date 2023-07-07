@@ -8,7 +8,7 @@
   (defconfig nil
     (home :env "HOME")
     (unset-var :env "doesnt-exist" :default "default-value")
-    (int-var :default "3" :key (lambda (x) (parse-integer x)))
+    (int-var :default "3" :key #'parse-integer)
     (kw-var :default "foo" :key (lambda (x) (intern (string-upcase x) :keyword)))
     (reference-var :default (* 2 (config-int-var)))))
 

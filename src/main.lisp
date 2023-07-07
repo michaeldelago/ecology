@@ -29,7 +29,7 @@
       `(defun ,(symbol-append prefix name) ()
          ,(if (null key)
               config-value
-              `(funcall ,key ,config-value))))))
+              (list 'funcall key config-value))))))
 
 (defmacro defconfig ((&key (prefix 'config-)) &rest configs)
   "Defines a configuration specification. Each configuration parameter is exposed as a function that will execute the command to grab the configuration"
