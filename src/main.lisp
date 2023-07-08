@@ -23,7 +23,7 @@
       config
     (let ((config-value
            `(or ,(when env
-                   `(uiop:getenvp ,(make-env-var env)))
+                   (list 'uiop:getenvp (make-env-var env)))
                 ,(when default
                    default))))
       `(defun ,(symbol-append prefix name) ()
