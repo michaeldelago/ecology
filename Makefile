@@ -4,25 +4,20 @@ PREFIX:=$(HOME)/bin
 
 build: clean
 	$(LISP) \
-	  --eval "(ql:quickload 'asdf)" \
-		--eval '(asdf:load-asd "$(PWD)/ecology.asd")' \
-		--eval '(ql:quickload :ecology)' \
+		--eval '(asdf:load-system :ecology)' \
 		--quit
 
 check: test
 
 test:
 	$(LISP) --non-interactive \
-	  --eval "(ql:quickload 'asdf)" \
-		--eval '(asdf:load-asd "$(PWD)/ecology.asd")' \
-	  --eval '(ql:quickload :ecology/tests)' \
+		--eval '(asdf:load-system :ecology)' \
 		--eval '(asdf:test-system :ecology)' \
 		--quit
 
 shell:
-	rlwrap $(LISP) --eval "(ql:quickload 'asdf)" \
-		--eval '(asdf:load-asd "$(PWD)/ecology.asd")' \
-    --eval '(ql:quickload :ecology)'
+	rlwrap $(LISP) \
+		--eval '(asdf:load-system :ecology)'
 
 # Install formatter with command:
 # $(LISP) ros install hyotang666/trivial-formatter
